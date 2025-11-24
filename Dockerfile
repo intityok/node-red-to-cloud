@@ -10,4 +10,4 @@ COPY flows_cred.json /data/flows_cred.json
 COPY settings.js /data/settings.js
 
 EXPOSE 8080
-CMD ["npm", "start", "--", "--userDir", "/data"]
+CMD ["node-red", "--userDir", "/data", "--settings", "/data/settings.js"]
