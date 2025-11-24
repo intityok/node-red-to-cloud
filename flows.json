@@ -1,0 +1,277 @@
+[
+    {
+        "id": "f0d55b25b86a162f",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "d133df48fe219531",
+        "type": "http in",
+        "z": "f0d55b25b86a162f",
+        "name": "",
+        "url": "/dsmwatchdog",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 130,
+        "y": 80,
+        "wires": [
+            [
+                "74cdfbe0875f4808"
+            ]
+        ]
+    },
+    {
+        "id": "74cdfbe0875f4808",
+        "type": "http request",
+        "z": "f0d55b25b86a162f",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://drive.int.in.th/webapi/auth.cgi?api=SYNO.API.Auth&method=login&version=6&account=korkarn&passwd=INTit2025%21&session=Core&format=cookie",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 340,
+        "y": 80,
+        "wires": [
+            [
+                "98de69e3d7e82dc3"
+            ]
+        ]
+    },
+    {
+        "id": "98de69e3d7e82dc3",
+        "type": "json",
+        "z": "f0d55b25b86a162f",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 500,
+        "y": 80,
+        "wires": [
+            [
+                "035ef6f939cdf703"
+            ]
+        ]
+    },
+    {
+        "id": "0f90bbf72aed2392",
+        "type": "http request",
+        "z": "f0d55b25b86a162f",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://drive.int.in.th/webapi/entry.cgi?api=SYNO.Core.System.Utilization&method=get&version=1",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 820,
+        "y": 80,
+        "wires": [
+            [
+                "b18a61ddf1688e1c"
+            ]
+        ]
+    },
+    {
+        "id": "035ef6f939cdf703",
+        "type": "function",
+        "z": "f0d55b25b86a162f",
+        "name": "function 1",
+        "func": "msg.headers = {\n    \"Cookie\": \"id=\" + msg.payload.data.sid\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 80,
+        "wires": [
+            [
+                "0f90bbf72aed2392"
+            ]
+        ]
+    },
+    {
+        "id": "fc9194fd3c0bd0d0",
+        "type": "http response",
+        "z": "f0d55b25b86a162f",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1100,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "b18a61ddf1688e1c",
+        "type": "json",
+        "z": "f0d55b25b86a162f",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 980,
+        "y": 80,
+        "wires": [
+            [
+                "fc9194fd3c0bd0d0"
+            ]
+        ]
+    },
+    {
+        "id": "36ccabc48cdfaf88",
+        "type": "http request",
+        "z": "f0d55b25b86a162f",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://rb2011.int.in.th/rest/system/resource",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "basic",
+        "senderr": false,
+        "headers": [],
+        "x": 340,
+        "y": 200,
+        "wires": [
+            [
+                "252466bb12c01637"
+            ]
+        ]
+    },
+    {
+        "id": "24c7219490abd42f",
+        "type": "http in",
+        "z": "f0d55b25b86a162f",
+        "name": "",
+        "url": "/2011watchdog",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 130,
+        "y": 200,
+        "wires": [
+            [
+                "36ccabc48cdfaf88"
+            ]
+        ]
+    },
+    {
+        "id": "252466bb12c01637",
+        "type": "json",
+        "z": "f0d55b25b86a162f",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 510,
+        "y": 200,
+        "wires": [
+            [
+                "1fb43a5634b442ba"
+            ]
+        ]
+    },
+    {
+        "id": "1fb43a5634b442ba",
+        "type": "http response",
+        "z": "f0d55b25b86a162f",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 630,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "1b42083499de8be9",
+        "type": "http request",
+        "z": "f0d55b25b86a162f",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://rb4011.int.in.th/rest/system/resource",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "basic",
+        "senderr": false,
+        "headers": [],
+        "x": 340,
+        "y": 300,
+        "wires": [
+            [
+                "3f70b999971c485c"
+            ]
+        ]
+    },
+    {
+        "id": "531e6331761d87b6",
+        "type": "http in",
+        "z": "f0d55b25b86a162f",
+        "name": "",
+        "url": "/4011watchdog",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 130,
+        "y": 300,
+        "wires": [
+            [
+                "1b42083499de8be9"
+            ]
+        ]
+    },
+    {
+        "id": "3f70b999971c485c",
+        "type": "json",
+        "z": "f0d55b25b86a162f",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 510,
+        "y": 300,
+        "wires": [
+            [
+                "566840b1ce573182"
+            ]
+        ]
+    },
+    {
+        "id": "566840b1ce573182",
+        "type": "http response",
+        "z": "f0d55b25b86a162f",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 630,
+        "y": 300,
+        "wires": []
+    }
+]
