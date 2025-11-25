@@ -144,7 +144,7 @@
         "method": "GET",
         "ret": "txt",
         "paytoqs": "ignore",
-        "url": "https://rb2011.int.in.th/rest/system/resource",
+        "url": "https://grafana:INTit2025!@rb2011.int.in.th/rest/system/resource",
         "tls": "",
         "persist": false,
         "proxy": "",
@@ -152,8 +152,8 @@
         "authType": "basic",
         "senderr": false,
         "headers": [],
-        "x": 340,
-        "y": 200,
+        "x": 370,
+        "y": 180,
         "wires": [
             [
                 "252466bb12c01637"
@@ -171,7 +171,7 @@
         "skipBodyParsing": false,
         "swaggerDoc": "",
         "x": 130,
-        "y": 200,
+        "y": 180,
         "wires": [
             [
                 "36ccabc48cdfaf88"
@@ -186,8 +186,8 @@
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 510,
-        "y": 200,
+        "x": 540,
+        "y": 180,
         "wires": [
             [
                 "1fb43a5634b442ba"
@@ -201,8 +201,8 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 630,
-        "y": 200,
+        "x": 660,
+        "y": 180,
         "wires": []
     },
     {
@@ -213,7 +213,7 @@
         "method": "GET",
         "ret": "txt",
         "paytoqs": "ignore",
-        "url": "https://rb4011.int.in.th/rest/system/resource",
+        "url": "https://grafana:INTit2025!@rb4011.int.in.th/rest/system/resource",
         "tls": "",
         "persist": false,
         "proxy": "",
@@ -221,8 +221,8 @@
         "authType": "basic",
         "senderr": false,
         "headers": [],
-        "x": 340,
-        "y": 300,
+        "x": 370,
+        "y": 280,
         "wires": [
             [
                 "3f70b999971c485c"
@@ -240,7 +240,7 @@
         "skipBodyParsing": false,
         "swaggerDoc": "",
         "x": 130,
-        "y": 300,
+        "y": 280,
         "wires": [
             [
                 "1b42083499de8be9"
@@ -255,8 +255,8 @@
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 510,
-        "y": 300,
+        "x": 540,
+        "y": 280,
         "wires": [
             [
                 "566840b1ce573182"
@@ -270,8 +270,618 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 630,
-        "y": 300,
+        "x": 660,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "4ece4bc39b2a2126",
+        "type": "http in",
+        "z": "f0d55b25b86a162f",
+        "name": "",
+        "url": "/nvrsummary",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 130,
+        "y": 380,
+        "wires": [
+            [
+                "1510c590bee3de24"
+            ]
+        ]
+    },
+    {
+        "id": "02359f3eb64666cd",
+        "type": "http response",
+        "z": "f0d55b25b86a162f",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1250,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "8ab449dc096eab86",
+        "type": "http in",
+        "z": "f0d55b25b86a162f",
+        "name": "",
+        "url": "/nvrhealth",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 680,
+        "wires": [
+            [
+                "85a6d21968a2e2ba"
+            ]
+        ]
+    },
+    {
+        "id": "c64b8a4a4571bc8d",
+        "type": "http in",
+        "z": "f0d55b25b86a162f",
+        "name": "",
+        "url": "/nvrrecordstatus",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 140,
+        "y": 780,
+        "wires": [
+            [
+                "4dccae97803d5f8d"
+            ]
+        ]
+    },
+    {
+        "id": "1510c590bee3de24",
+        "type": "http request",
+        "z": "f0d55b25b86a162f",
+        "name": "Digest Step 1 (401)",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://int.in.th:37080/cgi-bin/magicBox.cgi?action=getSystemInfo",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 350,
+        "y": 380,
+        "wires": [
+            [
+                "dcf53f85465e067c"
+            ]
+        ]
+    },
+    {
+        "id": "dcf53f85465e067c",
+        "type": "function",
+        "z": "f0d55b25b86a162f",
+        "name": "Build Digest Header",
+        "func": "// Parse WWW-Authenticate header\nlet h = msg.headers[\"www-authenticate\"];\nif (!h) {\n    node.error(\"No digest challenge returned\", msg);\n    return null;\n}\n\n// Extract parameters from digest\nfunction getVal(str, key) {\n    let m = str.match(new RegExp(key + '=\"([^\"]+)\"'));\n    return m ? m[1] : \"\";\n}\n\n// Credentials from environment\nlet user = \"grafana\";\nlet pass = \"INTit2025!\";\n\n// Digest params\nlet realm = getVal(h, \"realm\");\nlet nonce = getVal(h, \"nonce\");\nlet qop = getVal(h, \"qop\");\nlet opaque = getVal(h, \"opaque\");\n\n// Helper: MD5 hashing\nfunction toMD5(value) {\n    return crypto.createHash(\"md5\").update(value).digest(\"hex\");\n}\n\n// Request info\nlet method = \"GET\";\nlet uri = msg.responseUrl.replace(/^https?:\\/\\/[^/]+/, \"\");\n\n// Nonce count + client nonce\nlet nc = \"00000001\";\nlet cnonce = toMD5((Math.random() * 1e9).toString()).substring(0, 16);\n\n// Compute HA1, HA2, response\nlet HA1 = toMD5(`${user}:${realm}:${pass}`);\nlet HA2 = toMD5(`${method}:${uri}`);\nlet response = toMD5(`${HA1}:${nonce}:${nc}:${cnonce}:${qop}:${HA2}`);\n\n// Build Digest Authorization header\nlet digest =\n    `Digest username=\"${user}\", realm=\"${realm}\", nonce=\"${nonce}\", uri=\"${uri}\", ` +\n    `qop=${qop}, nc=${nc}, cnonce=\"${cnonce}\", response=\"${response}\", opaque=\"${opaque}\"`;\n\n// Apply header for the next request\nmsg.headers = {\n    \"Authorization\": digest\n};\n\n// Repeat the same URL\nmsg.url = msg.responseUrl;\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "crypto",
+                "module": "crypto"
+            }
+        ],
+        "x": 590,
+        "y": 380,
+        "wires": [
+            [
+                "4f2b900603233db8"
+            ]
+        ]
+    },
+    {
+        "id": "4f2b900603233db8",
+        "type": "http request",
+        "z": "f0d55b25b86a162f",
+        "name": "Digest Step 2 (Authenticated)",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://int.in.th:37080/cgi-bin/magicBox.cgi?action=getSystemInfo",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 870,
+        "y": 380,
+        "wires": [
+            [
+                "45c26bb32b146f1e"
+            ]
+        ]
+    },
+    {
+        "id": "45c26bb32b146f1e",
+        "type": "function",
+        "z": "f0d55b25b86a162f",
+        "name": "function 2",
+        "func": "let lines = msg.payload.split(/\\r?\\n/);\nlet result = {};\n\nfor (let line of lines) {\n    if (!line.includes(\"=\")) continue;\n    let [key, value] = line.split(\"=\");\n    result[key.trim()] = value.trim();\n}\n\nmsg.payload = result;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1090,
+        "y": 380,
+        "wires": [
+            [
+                "02359f3eb64666cd"
+            ]
+        ]
+    },
+    {
+        "id": "9ad8f60d1453f931",
+        "type": "http in",
+        "z": "f0d55b25b86a162f",
+        "name": "",
+        "url": "/nvrslowspace",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 130,
+        "y": 480,
+        "wires": [
+            [
+                "0c6e7767f8b0d4a4"
+            ]
+        ]
+    },
+    {
+        "id": "0c6e7767f8b0d4a4",
+        "type": "http request",
+        "z": "f0d55b25b86a162f",
+        "name": "Digest Step 1 (401)",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://int.in.th:37080/cgi-bin/configManager.cgi?action=getConfig&name=StorageLowSpace",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 350,
+        "y": 480,
+        "wires": [
+            [
+                "3b965761dee5cb99"
+            ]
+        ]
+    },
+    {
+        "id": "3b965761dee5cb99",
+        "type": "function",
+        "z": "f0d55b25b86a162f",
+        "name": "Build Digest Header",
+        "func": "// Parse WWW-Authenticate header\nlet h = msg.headers[\"www-authenticate\"];\nif (!h) {\n    node.error(\"No digest challenge returned\", msg);\n    return null;\n}\n\n// Extract parameters from digest\nfunction getVal(str, key) {\n    let m = str.match(new RegExp(key + '=\"([^\"]+)\"'));\n    return m ? m[1] : \"\";\n}\n\n// Credentials from environment\nlet user = \"grafana\";\nlet pass = \"INTit2025!\";\n\n// Digest params\nlet realm = getVal(h, \"realm\");\nlet nonce = getVal(h, \"nonce\");\nlet qop = getVal(h, \"qop\");\nlet opaque = getVal(h, \"opaque\");\n\n// Helper: MD5 hashing\nfunction toMD5(value) {\n    return crypto.createHash(\"md5\").update(value).digest(\"hex\");\n}\n\n// Request info\nlet method = \"GET\";\nlet uri = msg.responseUrl.replace(/^https?:\\/\\/[^/]+/, \"\");\n\n// Nonce count + client nonce\nlet nc = \"00000001\";\nlet cnonce = toMD5((Math.random() * 1e9).toString()).substring(0, 16);\n\n// Compute HA1, HA2, response\nlet HA1 = toMD5(`${user}:${realm}:${pass}`);\nlet HA2 = toMD5(`${method}:${uri}`);\nlet response = toMD5(`${HA1}:${nonce}:${nc}:${cnonce}:${qop}:${HA2}`);\n\n// Build Digest Authorization header\nlet digest =\n    `Digest username=\"${user}\", realm=\"${realm}\", nonce=\"${nonce}\", uri=\"${uri}\", ` +\n    `qop=${qop}, nc=${nc}, cnonce=\"${cnonce}\", response=\"${response}\", opaque=\"${opaque}\"`;\n\n// Apply header for the next request\nmsg.headers = {\n    \"Authorization\": digest\n};\n\n// Repeat the same URL\nmsg.url = msg.responseUrl;\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "crypto",
+                "module": "crypto"
+            }
+        ],
+        "x": 590,
+        "y": 480,
+        "wires": [
+            [
+                "995896d9d4b79d1e"
+            ]
+        ]
+    },
+    {
+        "id": "995896d9d4b79d1e",
+        "type": "http request",
+        "z": "f0d55b25b86a162f",
+        "name": "Digest Step 2 (Authenticated)",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://int.in.th:37080/cgi-bin/configManager.cgi?action=getConfig&name=StorageLowSpace",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 870,
+        "y": 480,
+        "wires": [
+            [
+                "1c2d844053632858"
+            ]
+        ]
+    },
+    {
+        "id": "1c2d844053632858",
+        "type": "function",
+        "z": "f0d55b25b86a162f",
+        "name": "function 4",
+        "func": "let lines = msg.payload.split(/\\r?\\n/);\nlet result = {};\n\nfor (let line of lines) {\n    if (!line.includes(\"=\")) continue;\n    let [key, value] = line.split(\"=\");\n    result[key.trim()] = value.trim();\n}\n\nmsg.payload = result;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1090,
+        "y": 480,
+        "wires": [
+            [
+                "06cec878396e6a58"
+            ]
+        ]
+    },
+    {
+        "id": "06cec878396e6a58",
+        "type": "http response",
+        "z": "f0d55b25b86a162f",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1250,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "7d4eedb54fde4b2f",
+        "type": "http request",
+        "z": "f0d55b25b86a162f",
+        "name": "Digest Step 1 (401)",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://int.in.th:37080/cgi-bin/configManager.cgi?action=getConfig&name=StorageFailure",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 350,
+        "y": 580,
+        "wires": [
+            [
+                "3c2cb3f50842547b"
+            ]
+        ]
+    },
+    {
+        "id": "3c2cb3f50842547b",
+        "type": "function",
+        "z": "f0d55b25b86a162f",
+        "name": "Build Digest Header",
+        "func": "// Parse WWW-Authenticate header\nlet h = msg.headers[\"www-authenticate\"];\nif (!h) {\n    node.error(\"No digest challenge returned\", msg);\n    return null;\n}\n\n// Extract parameters from digest\nfunction getVal(str, key) {\n    let m = str.match(new RegExp(key + '=\"([^\"]+)\"'));\n    return m ? m[1] : \"\";\n}\n\n// Credentials from environment\nlet user = \"grafana\";\nlet pass = \"INTit2025!\";\n\n// Digest params\nlet realm = getVal(h, \"realm\");\nlet nonce = getVal(h, \"nonce\");\nlet qop = getVal(h, \"qop\");\nlet opaque = getVal(h, \"opaque\");\n\n// Helper: MD5 hashing\nfunction toMD5(value) {\n    return crypto.createHash(\"md5\").update(value).digest(\"hex\");\n}\n\n// Request info\nlet method = \"GET\";\nlet uri = msg.responseUrl.replace(/^https?:\\/\\/[^/]+/, \"\");\n\n// Nonce count + client nonce\nlet nc = \"00000001\";\nlet cnonce = toMD5((Math.random() * 1e9).toString()).substring(0, 16);\n\n// Compute HA1, HA2, response\nlet HA1 = toMD5(`${user}:${realm}:${pass}`);\nlet HA2 = toMD5(`${method}:${uri}`);\nlet response = toMD5(`${HA1}:${nonce}:${nc}:${cnonce}:${qop}:${HA2}`);\n\n// Build Digest Authorization header\nlet digest =\n    `Digest username=\"${user}\", realm=\"${realm}\", nonce=\"${nonce}\", uri=\"${uri}\", ` +\n    `qop=${qop}, nc=${nc}, cnonce=\"${cnonce}\", response=\"${response}\", opaque=\"${opaque}\"`;\n\n// Apply header for the next request\nmsg.headers = {\n    \"Authorization\": digest\n};\n\n// Repeat the same URL\nmsg.url = msg.responseUrl;\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "crypto",
+                "module": "crypto"
+            }
+        ],
+        "x": 590,
+        "y": 580,
+        "wires": [
+            [
+                "0645f6b6e1e42acd"
+            ]
+        ]
+    },
+    {
+        "id": "0645f6b6e1e42acd",
+        "type": "http request",
+        "z": "f0d55b25b86a162f",
+        "name": "Digest Step 2 (Authenticated)",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://int.in.th:37080/cgi-bin/configManager.cgi?action=getConfig&name=StorageFailure",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 870,
+        "y": 580,
+        "wires": [
+            [
+                "30bd2d6faeb00792"
+            ]
+        ]
+    },
+    {
+        "id": "30bd2d6faeb00792",
+        "type": "function",
+        "z": "f0d55b25b86a162f",
+        "name": "function 5",
+        "func": "let lines = msg.payload.split(/\\r?\\n/);\nlet result = {};\n\nfor (let line of lines) {\n    if (!line.includes(\"=\")) continue;\n    let [key, value] = line.split(\"=\");\n    result[key.trim()] = value.trim();\n}\n\nmsg.payload = result;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1090,
+        "y": 580,
+        "wires": [
+            [
+                "bdf7e46ec4c238c5"
+            ]
+        ]
+    },
+    {
+        "id": "bdf7e46ec4c238c5",
+        "type": "http response",
+        "z": "f0d55b25b86a162f",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1250,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "a0a2f84b6c7d72a6",
+        "type": "http in",
+        "z": "f0d55b25b86a162f",
+        "name": "",
+        "url": "/nvrshddfail",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 580,
+        "wires": [
+            [
+                "7d4eedb54fde4b2f"
+            ]
+        ]
+    },
+    {
+        "id": "85a6d21968a2e2ba",
+        "type": "http request",
+        "z": "f0d55b25b86a162f",
+        "name": "Digest Step 1 (401)",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://int.in.th:37080/cgi-bin/configManager.cgi?action=getConfig&name=StorageNotExist",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 350,
+        "y": 680,
+        "wires": [
+            [
+                "e69594ba9cb4740f"
+            ]
+        ]
+    },
+    {
+        "id": "e69594ba9cb4740f",
+        "type": "function",
+        "z": "f0d55b25b86a162f",
+        "name": "Build Digest Header",
+        "func": "// Parse WWW-Authenticate header\nlet h = msg.headers[\"www-authenticate\"];\nif (!h) {\n    node.error(\"No digest challenge returned\", msg);\n    return null;\n}\n\n// Extract parameters from digest\nfunction getVal(str, key) {\n    let m = str.match(new RegExp(key + '=\"([^\"]+)\"'));\n    return m ? m[1] : \"\";\n}\n\n// Credentials from environment\nlet user = \"grafana\";\nlet pass = \"INTit2025!\";\n\n// Digest params\nlet realm = getVal(h, \"realm\");\nlet nonce = getVal(h, \"nonce\");\nlet qop = getVal(h, \"qop\");\nlet opaque = getVal(h, \"opaque\");\n\n// Helper: MD5 hashing\nfunction toMD5(value) {\n    return crypto.createHash(\"md5\").update(value).digest(\"hex\");\n}\n\n// Request info\nlet method = \"GET\";\nlet uri = msg.responseUrl.replace(/^https?:\\/\\/[^/]+/, \"\");\n\n// Nonce count + client nonce\nlet nc = \"00000001\";\nlet cnonce = toMD5((Math.random() * 1e9).toString()).substring(0, 16);\n\n// Compute HA1, HA2, response\nlet HA1 = toMD5(`${user}:${realm}:${pass}`);\nlet HA2 = toMD5(`${method}:${uri}`);\nlet response = toMD5(`${HA1}:${nonce}:${nc}:${cnonce}:${qop}:${HA2}`);\n\n// Build Digest Authorization header\nlet digest =\n    `Digest username=\"${user}\", realm=\"${realm}\", nonce=\"${nonce}\", uri=\"${uri}\", ` +\n    `qop=${qop}, nc=${nc}, cnonce=\"${cnonce}\", response=\"${response}\", opaque=\"${opaque}\"`;\n\n// Apply header for the next request\nmsg.headers = {\n    \"Authorization\": digest\n};\n\n// Repeat the same URL\nmsg.url = msg.responseUrl;\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "crypto",
+                "module": "crypto"
+            }
+        ],
+        "x": 590,
+        "y": 680,
+        "wires": [
+            [
+                "2b14f215d2c5d4f2"
+            ]
+        ]
+    },
+    {
+        "id": "2b14f215d2c5d4f2",
+        "type": "http request",
+        "z": "f0d55b25b86a162f",
+        "name": "Digest Step 2 (Authenticated)",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://int.in.th:37080/cgi-bin/configManager.cgi?action=getConfig&name=StorageNotExist",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 870,
+        "y": 680,
+        "wires": [
+            [
+                "ca41a2e806f53670"
+            ]
+        ]
+    },
+    {
+        "id": "ca41a2e806f53670",
+        "type": "function",
+        "z": "f0d55b25b86a162f",
+        "name": "function 6",
+        "func": "let lines = msg.payload.split(/\\r?\\n/);\nlet result = {};\n\nfor (let line of lines) {\n    if (!line.includes(\"=\")) continue;\n    let [key, value] = line.split(\"=\");\n    result[key.trim()] = value.trim();\n}\n\nmsg.payload = result;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1090,
+        "y": 680,
+        "wires": [
+            [
+                "5781c107e7ae88b9"
+            ]
+        ]
+    },
+    {
+        "id": "5781c107e7ae88b9",
+        "type": "http response",
+        "z": "f0d55b25b86a162f",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1250,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "4dccae97803d5f8d",
+        "type": "http request",
+        "z": "f0d55b25b86a162f",
+        "name": "Digest Step 1 (401)",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://int.in.th:37080/cgi-bin/configManager.cgi?action=getConfig&name=Encode",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 350,
+        "y": 780,
+        "wires": [
+            [
+                "50fcb2f5bf8c396a"
+            ]
+        ]
+    },
+    {
+        "id": "50fcb2f5bf8c396a",
+        "type": "function",
+        "z": "f0d55b25b86a162f",
+        "name": "Build Digest Header",
+        "func": "// Parse WWW-Authenticate header\nlet h = msg.headers[\"www-authenticate\"];\nif (!h) {\n    node.error(\"No digest challenge returned\", msg);\n    return null;\n}\n\n// Extract parameters from digest\nfunction getVal(str, key) {\n    let m = str.match(new RegExp(key + '=\"([^\"]+)\"'));\n    return m ? m[1] : \"\";\n}\n\n// Credentials from environment\nlet user = \"grafana\";\nlet pass = \"INTit2025!\";\n\n// Digest params\nlet realm = getVal(h, \"realm\");\nlet nonce = getVal(h, \"nonce\");\nlet qop = getVal(h, \"qop\");\nlet opaque = getVal(h, \"opaque\");\n\n// Helper: MD5 hashing\nfunction toMD5(value) {\n    return crypto.createHash(\"md5\").update(value).digest(\"hex\");\n}\n\n// Request info\nlet method = \"GET\";\nlet uri = msg.responseUrl.replace(/^https?:\\/\\/[^/]+/, \"\");\n\n// Nonce count + client nonce\nlet nc = \"00000001\";\nlet cnonce = toMD5((Math.random() * 1e9).toString()).substring(0, 16);\n\n// Compute HA1, HA2, response\nlet HA1 = toMD5(`${user}:${realm}:${pass}`);\nlet HA2 = toMD5(`${method}:${uri}`);\nlet response = toMD5(`${HA1}:${nonce}:${nc}:${cnonce}:${qop}:${HA2}`);\n\n// Build Digest Authorization header\nlet digest =\n    `Digest username=\"${user}\", realm=\"${realm}\", nonce=\"${nonce}\", uri=\"${uri}\", ` +\n    `qop=${qop}, nc=${nc}, cnonce=\"${cnonce}\", response=\"${response}\", opaque=\"${opaque}\"`;\n\n// Apply header for the next request\nmsg.headers = {\n    \"Authorization\": digest\n};\n\n// Repeat the same URL\nmsg.url = msg.responseUrl;\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "crypto",
+                "module": "crypto"
+            }
+        ],
+        "x": 590,
+        "y": 780,
+        "wires": [
+            [
+                "c1335589a9481609"
+            ]
+        ]
+    },
+    {
+        "id": "c1335589a9481609",
+        "type": "http request",
+        "z": "f0d55b25b86a162f",
+        "name": "Digest Step 2 (Authenticated)",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://int.in.th:37080/cgi-bin/configManager.cgi?action=getConfig&name=Encode",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 870,
+        "y": 780,
+        "wires": [
+            [
+                "562c8546b2f3474c"
+            ]
+        ]
+    },
+    {
+        "id": "562c8546b2f3474c",
+        "type": "function",
+        "z": "f0d55b25b86a162f",
+        "name": "function 7",
+        "func": "let lines = msg.payload.split(/\\r?\\n/);\nlet result = {};\n\nfor (let line of lines) {\n    if (!line.includes(\"=\")) continue;\n    let [key, value] = line.split(\"=\");\n    result[key.trim()] = value.trim();\n}\n\nmsg.payload = result;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1090,
+        "y": 780,
+        "wires": [
+            [
+                "160c6a843ae07ea7"
+            ]
+        ]
+    },
+    {
+        "id": "160c6a843ae07ea7",
+        "type": "http response",
+        "z": "f0d55b25b86a162f",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1250,
+        "y": 780,
         "wires": []
     }
 ]
